@@ -8,9 +8,12 @@
 	<body>
 	<div class="container">
         <h1> Enter Todo Details </h1>
-        <form method = "post">
-            Description: <input type="text" name="description" required="required"/>
-            <input type = "submit" value = "Submit" class = "btn btn-success" />
+        <form method = "post"  modelAttribute="todo">
+               Description: <input type="text" name="description" required="required"/>
+                <form:errors path="description" cssClass"text-warning"/>
+                <input type="hidden" path="id"/>
+                 <input type="hidden" path="done"/>
+                <input type = "submit" value = "Submit" class = "btn btn-success" />
         </div>
         <script src="webjars\bootstrap\5.3.0\js\bootstrap.min.js"></script>
         <script src="webjars\jquery\3.6.0\jquery.min.js"></script>
