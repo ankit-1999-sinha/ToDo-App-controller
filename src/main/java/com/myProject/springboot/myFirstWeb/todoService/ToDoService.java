@@ -7,11 +7,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service
 public class ToDoService {
 
     private static List<ToDo> todos = new ArrayList<>();
+
 
     private static  int todoCount = 0;
     static {
@@ -32,5 +34,10 @@ public class ToDoService {
 
     public void addNewTodo(String username, String description, LocalDate targetDate, boolean isDone) {
         todos.add(new ToDo(++todoCount, username, description, targetDate, isDone));
+    }
+
+    public void deleteByID(int id){
+        Predicate<? super ToDo> predicate = toDo -> toDo.getId() == id;
+        todos.removeIf(predicate);
     }
 }
