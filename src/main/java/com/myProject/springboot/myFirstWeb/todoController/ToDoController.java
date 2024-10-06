@@ -31,41 +31,42 @@ public class ToDoController {
 
     @RequestMapping("lists-todos")
     public String showAllToDos(ModelMap modelMap) {
-       List<ToDo> todos =  toDoService.retrieveTodosByName("ankit");
-       modelMap.addAttribute("todos", todos); // (key, value ) pair
+        List<ToDo> todos =  toDoService.retrieveTodosByName("ankit");
+        modelMap.addAttribute("todos", todos);
         return "listTodos";
     }
 
     @RequestMapping(value = "add-todo",method = RequestMethod.GET)
     public String showTodoPage(ModelMap modelMap) {
+        String userName = modelMap.get("name").toString();
+        ToDo toDo = new ToDo(0,userName,"",LocalDate.now().plusYears(1),  false);
+        modelMap.put("toDo",toDo); // (key, value) pair
         return "todo";
     }
 
     @RequestMapping(value = "add-todo",method = RequestMethod.POST)
-    public String addNewTodoPage(ModelMap modelMap, @Valid ToDo todo, BindingResult result) {
-
-        if(result.hasErrors()){
+    public String addNewTodoPage(ModelMap modelMap, @Valid ToDo toDo, BindingResult result) {
+        if(result.hasErrors()) {
             return "todo";
         }
         String userName = modelMap.get("name").toString();
         Logger logger = Logger.getLogger(ToDoController.class.getName());
         logger.info("userName is : "+userName);
-        toDoService.addNewTodo(userName,todo.getDescription(), LocalDate.now().plusYears(1),false);
-        return "redirect:lists-todos";
+        toDoService.addNewTodo(userName,toDo.getDescription(), LocalDate.now().plusYears(1),false);
+        return "redirect:/lists-todos";
 
     }
 
     @RequestMapping("delete-todo")
     public String deleteToDo(@RequestParam int id) {
-        //DELETE todo
         toDoService.deleteByID(id);
-        return "redirect:lists-todos";
+        return "redirect:/lists-todos";
     }
 
     @RequestMapping(value = "update-todo", method = RequestMethod.GET)
     public String showUpdateToDoPage(@RequestParam int id,ModelMap model) {
         ToDo todo = toDoService.findById(id);
-        model.addAttribute("todo",todo);
+        model.addAttribute("toDo",todo);
         return "todo";
     }
 
@@ -76,11 +77,7 @@ public class ToDoController {
             return "todo";
         }
 
-        String userName = modelMap.get("name").toString();
-        Logger logger = Logger.getLogger(ToDoController.class.getName());
-        logger.info("userName is : "+userName);
         toDoService.updateTodo(todo);
-        return "redirect:lists-todos";
-
+        return "redirect:/lists-todos";
     }
 }
