@@ -77,6 +77,10 @@ public class ToDoController {
             return "todo";
         }
 
+        String userName = modelMap.get("name").toString();
+        Logger logger = Logger.getLogger(ToDoController.class.getName());
+        logger.info(" userName is : " + userName);
+        todo.setUserName(userName);
         toDoService.updateTodo(todo);
         return "redirect:/lists-todos";
     }
