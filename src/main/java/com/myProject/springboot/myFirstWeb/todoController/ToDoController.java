@@ -2,9 +2,11 @@ package com.myProject.springboot.myFirstWeb.todoController;
 
 import com.myProject.springboot.myFirstWeb.todo.ToDo;
 import com.myProject.springboot.myFirstWeb.todoService.ToDoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,12 +42,16 @@ public class ToDoController {
     }
 
     @RequestMapping(value = "add-todo",method = RequestMethod.POST)
-    public String addNewTodoPage(@RequestParam String description,ModelMap modelMap) {
+    public String addNewTodoPage(ModelMap modelMap, @Valid ToDo todo, BindingResult result) {
+
+        if(result.hasErrors()){
+            return "todo";
+        }
         String userName = modelMap.get("name").toString();
         Logger logger = Logger.getLogger(ToDoController.class.getName());
         logger.info("userName is : "+userName);
-        toDoService.addNewTodo(userName,description, LocalDate.now().plusYears(1),false);
-        return "redirect:/lists-todos";
+        toDoService.addNewTodo(userName,todo.getDescription(), LocalDate.now().plusYears(1),false);
+        return "redirect:lists-todos";
 
     }
 
@@ -56,10 +62,25 @@ public class ToDoController {
         return "redirect:lists-todos";
     }
 
-    @RequestMapping("update-todo")
+    @RequestMapping(value = "update-todo", method = RequestMethod.GET)
     public String showUpdateToDoPage(@RequestParam int id,ModelMap model) {
         ToDo todo = toDoService.findById(id);
         model.addAttribute("todo",todo);
         return "todo";
+    }
+
+    @RequestMapping(value = "update-todo",method = RequestMethod.POST)
+    public String updateNewTodoPage(ModelMap modelMap, @Valid ToDo todo, BindingResult result) {
+
+        if(result.hasErrors()){
+            return "todo";
+        }
+
+        String userName = modelMap.get("name").toString();
+        Logger logger = Logger.getLogger(ToDoController.class.getName());
+        logger.info("userName is : "+userName);
+        toDoService.updateTodo(todo);
+        return "redirect:lists-todos";
+
     }
 }

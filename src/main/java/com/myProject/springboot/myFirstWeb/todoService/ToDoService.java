@@ -1,6 +1,8 @@
 package com.myProject.springboot.myFirstWeb.todoService;
 
 import com.myProject.springboot.myFirstWeb.todo.ToDo;
+import com.myProject.springboot.myFirstWeb.todoController.ToDoController;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -8,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 @Service
 public class ToDoService {
@@ -39,11 +42,18 @@ public class ToDoService {
     public void deleteByID(int id){
         Predicate<? super ToDo> predicate = toDo -> toDo.getId() == id;
         todos.removeIf(predicate);
+        Logger logger = Logger.getLogger(ToDoService.class.getName());
+        logger.info("Predicate is : "+ predicate);
     }
 
     public ToDo findById(int id) {
         Predicate<? super ToDo> predicate = toDo -> toDo.getId() == id;
         ToDo todo =  todos.stream().filter(predicate).findFirst().get();
         return  todo;
+    }
+
+    public void updateTodo(@Valid ToDo todo) {
+        deleteByID(todo.getId());
+        todos.add(todo);
     }
 }

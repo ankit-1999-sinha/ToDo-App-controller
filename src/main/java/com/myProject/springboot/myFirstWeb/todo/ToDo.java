@@ -1,5 +1,7 @@
 package com.myProject.springboot.myFirstWeb.todo;
 
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 
@@ -7,6 +9,7 @@ public class ToDo {
 
     private int id;
     private String userName;
+    @Size(min = 10,message = "enter at least 10 characters ......")
     private String description;
     private LocalDate targetDate;
     private boolean isDone;
@@ -49,6 +52,12 @@ public class ToDo {
 
     public void setTargetDate(LocalDate targetDate) {
         this.targetDate = targetDate;
+    }
+
+    public boolean getIsDone(){return isDone; }
+
+    public void setIsDone(boolean done) {
+        isDone = done;
     }
 
     public boolean isDone() {
