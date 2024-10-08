@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class ToDoController {
 
 
-    private ToDoService toDoService ;
+    private ToDoService toDoService;
 
 
     public ToDoController(ToDoService toDoService) {
@@ -31,28 +31,28 @@ public class ToDoController {
 
     @RequestMapping("lists-todos")
     public String showAllToDos(ModelMap modelMap) {
-        List<ToDo> todos =  toDoService.retrieveTodosByName("ankit");
+        List<ToDo> todos = toDoService.retrieveTodosByName("ankit");
         modelMap.addAttribute("todos", todos);
         return "listTodos";
     }
 
-    @RequestMapping(value = "add-todo",method = RequestMethod.GET)
+    @RequestMapping(value = "add-todo", method = RequestMethod.GET)
     public String showTodoPage(ModelMap modelMap) {
         String userName = modelMap.get("name").toString();
-        ToDo toDo = new ToDo(0,userName,"",LocalDate.now().plusYears(1),  false);
-        modelMap.put("toDo",toDo); // (key, value) pair
+        ToDo toDo = new ToDo(0, userName, "", LocalDate.now().plusYears(1), false);
+        modelMap.put("toDo", toDo); // (key, value) pair
         return "todo";
     }
 
-    @RequestMapping(value = "add-todo",method = RequestMethod.POST)
+    @RequestMapping(value = "add-todo", method = RequestMethod.POST)
     public String addNewTodoPage(ModelMap modelMap, @Valid ToDo toDo, BindingResult result) {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return "todo";
         }
         String userName = modelMap.get("name").toString();
         Logger logger = Logger.getLogger(ToDoController.class.getName());
-        logger.info("userName is : "+userName);
-        toDoService.addNewTodo(userName,toDo.getDescription(), LocalDate.now().plusYears(1),false);
+        logger.info("userName is : " + userName);
+        toDoService.addNewTodo(userName, toDo.getDescription(), LocalDate.now().plusYears(1), false);
         return "redirect:/lists-todos";
 
     }
@@ -64,16 +64,16 @@ public class ToDoController {
     }
 
     @RequestMapping(value = "update-todo", method = RequestMethod.GET)
-    public String showUpdateToDoPage(@RequestParam int id,ModelMap model) {
+    public String showUpdateToDoPage(@RequestParam int id, ModelMap model) {
         ToDo todo = toDoService.findById(id);
-        model.addAttribute("toDo",todo);
+        model.addAttribute("toDo", todo);
         return "todo";
     }
 
-    @RequestMapping(value = "update-todo",method = RequestMethod.POST)
+    @RequestMapping(value = "update-todo", method = RequestMethod.POST)
     public String updateNewTodoPage(ModelMap modelMap, @Valid ToDo todo, BindingResult result) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "todo";
         }
 

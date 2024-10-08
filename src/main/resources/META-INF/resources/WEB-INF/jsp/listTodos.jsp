@@ -1,11 +1,6 @@
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+       <%@ include file = "common/header.jspf" %>
+	   <%@ include file = "common/navigation.jspf" %>
 
-<html>
-	<head>
-	<link rel="stylesheet" type="text/css" href="webjars\bootstrap\5.3.0\css\bootstrap.min.css">
-		<title> List TODOs </title>
-	</head>
-	<body>
 	<div class="container">
         <h1> Your ToDos </h1>
             <table class="table">
@@ -33,7 +28,4 @@
             </table>
             <a href="add-todo" class = "btn btn-success">Add ToDos</a>
         </div>
-        <script src="webjars\bootstrap\5.3.0\js\bootstrap.min.js"></script>
-        <script src="webjars\jquery\3.6.0\jquery.min.js"></script>
-	</body>
-</html>
+     <%@ include file = "common/footer.jspf" %>
