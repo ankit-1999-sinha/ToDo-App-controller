@@ -28,7 +28,7 @@ public class ToDoService {
     public List<ToDo> retrieveTodosByName(String userName) {
         List<ToDo> filteredTodos = new ArrayList<ToDo>();
         for (ToDo todo : todos) {
-            if (todo.getUserName().equals(userName)) {
+            if (todo.getUserName().equalsIgnoreCase(userName)) {
                 filteredTodos.add(todo);
             }
         }

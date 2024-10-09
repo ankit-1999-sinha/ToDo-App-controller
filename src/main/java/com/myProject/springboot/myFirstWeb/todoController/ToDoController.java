@@ -4,6 +4,8 @@ import com.myProject.springboot.myFirstWeb.todo.ToDo;
 import com.myProject.springboot.myFirstWeb.todoService.ToDoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -31,15 +33,16 @@ public class ToDoController {
 
     @RequestMapping("lists-todos")
     public String showAllToDos(ModelMap modelMap) {
-        List<ToDo> todos = toDoService.retrieveTodosByName("ankit");
+        String username = getLoggedInUsername(modelMap);
+        List<ToDo> todos = toDoService.retrieveTodosByName(username);
         modelMap.addAttribute("todos", todos);
         return "listTodos";
     }
 
     @RequestMapping(value = "add-todo", method = RequestMethod.GET)
     public String showTodoPage(ModelMap modelMap) {
-        String userName = modelMap.get("name").toString();
-        ToDo toDo = new ToDo(0, userName, "", LocalDate.now().plusYears(1), false);
+        String username = getLoggedInUsername(modelMap);
+        ToDo toDo = new ToDo(0, username, "", LocalDate.now().plusYears(1), false);
         modelMap.put("toDo", toDo); // (key, value) pair
         return "todo";
     }
@@ -49,7 +52,7 @@ public class ToDoController {
         if (result.hasErrors()) {
             return "todo";
         }
-        String userName = modelMap.get("name").toString();
+        String userName = getLoggedInUsername(modelMap);
         Logger logger = Logger.getLogger(ToDoController.class.getName());
         logger.info("userName is : " + userName);
         toDoService.addNewTodo(userName, toDo.getDescription(), LocalDate.now().plusYears(1), false);
@@ -77,11 +80,19 @@ public class ToDoController {
             return "todo";
         }
 
-        String userName = modelMap.get("name").toString();
+        String userName = getLoggedInUsername(modelMap);
         Logger logger = Logger.getLogger(ToDoController.class.getName());
         logger.info(" userName is : " + userName);
         todo.setUserName(userName);
         toDoService.updateTodo(todo);
         return "redirect:/lists-todos";
+    }
+
+    private String getLoggedInUsername(ModelMap modelMap){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return authentication.getName();
+
     }
 }
