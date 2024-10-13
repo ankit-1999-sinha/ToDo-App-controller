@@ -1,0 +1,8 @@
+ we added data jpa and h2 dependencies:
+
+ 1. Spring boot auto configuration does some magic:
+
+   initialize JPA and spring data jpa frameworks
+   launch an in memory database (H2)
+   Setup connection from App to in-memory database
+   Launch a few scripts at startup (example = data.sql)

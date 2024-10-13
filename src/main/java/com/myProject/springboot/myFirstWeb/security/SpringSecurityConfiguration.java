@@ -1,12 +1,17 @@
 package com.myProject.springboot.myFirstWeb.security;
 
+import org.apache.catalina.filters.HttpHeaderSecurityFilter;
+import org.eclipse.tags.shaded.org.apache.bcel.generic.PUSH;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.function.Function;
 
@@ -36,5 +41,19 @@ public class SpringSecurityConfiguration {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    // 1. All URL are protected
+    // 2. A login form is shown for unauthorized requests
+    // 3. need to disable CSRF to connect with H2
+    // 4. H2 makes use of frames and spring security by default does not allow frames
+
+   @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity.authorizeHttpRequests(auth -> auth.anyRequest().permitAll()).csrf(csrf -> csrf.disable());
+        httpSecurity.formLogin(Customizer.withDefaults());
+        httpSecurity.headers().frameOptions().disable();
+
+        return httpSecurity.build();
+   }
 
 }
