@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-@Entity(name = "TODO")
+@Entity
 public class ToDo {
 
     @Id
